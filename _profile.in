@@ -6,8 +6,9 @@ export ENV=$HOME/.kshrc
 
 . $ENV
 
-
 export ENABLE_WASM=1
 
+export PATH="/home/sk/.local/bin:/home/sk/bin:/usr/local/jdk-17/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/X11R6/bin:/usr/bin:/usr/sbin:/bin:/sbin" 
 
-export PATH="/home/sk/.local/bin:/home/sk/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/X11R6/bin:/usr/bin:/usr/sbin:/bin:/sbin" 
+export JAVA_HOME="/usr/local/jdk-17"
+

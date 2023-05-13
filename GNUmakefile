@@ -117,8 +117,8 @@ $(HOME)/.kshrc: _kshrc.out
 
 
 # PROFILE =======================================================================
-profile: $(HOME)/.profile gpp
-_profile.out: _profile.in
+profile: $(HOME)/.profile
+_profile.out: _profile.in gpp
 	$(GPP) $< -o $@
 $(HOME)/.profile: _profile.out
 	install -b $< $@
