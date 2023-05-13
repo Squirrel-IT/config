@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# xrandr --output DVI-D-0 --mode 1920x1200 --output DisplayPort-0 --mode 3440x1440 --right-of DVI-D-0
+# xrandr --output DisplayPort-0 --off --output DisplayPort-1 --mode 1920x1200 --pos 0x240 --rotate normal --output HDMI-A-0 --off --output HDMI-A-1 --primary --mode 3440x1440 --pos 1920x0 --rotate normal
+#xrandr --output DisplayPort-0 --primary --mode 3440x1440 --pos 1920x0 --rotate normal --output HDMI-A-0 --off --output DVI-D-0 --mode 1920x1200 --pos 0x0 --rotate normal
+xrandr --output DisplayPort-0 --off --output DisplayPort-1 --mode 1920x1200 --pos 0x240 --rotate normal --output HDMI-A-0 --off --output HDMI-A-1 --primary --mode 3440x1440 --pos 1920x0 --rotate normal
+
+usr_confdir="${XDG_CONFIG_HOME:-$HOME/.config}"
+usr_autostart="$usr_confdir/squirrel/autostart" # unused
+usr_envfile="$usr_confdir/squirrel/environment" # unused
+usr_xsessionrc="$HOME/.xsessionrc"
+usr_resources="$HOME/.Xresources"
+
+# Clean up after GDM (GDM sets the number of desktops to one).
+xprop -root -remove _NET_NUMBER_OF_DESKTOPS -remove _NET_DESKTOP_NAMES -remove _NET_CURRENT_DESKTOP 2> /dev/null
+
+# Merge ~/.Xresources
+# (usually done by /etc/X11/Xsession.d/30x11-common_xresources)
+test -r "$usr_resources" && xrdb -merge "$usr_resources" || echo "$0: cannot merge $usr_resources" >&2
+
+# Set up the user environment for X sessions.
+# (usually sourced by /etc/X11/Xsession.d/40x11-common_xsessionrc)
+test -r "$usr_xsessionrc" && . "$usr_xsessionrc" || echo "$0: cannot source $usr_xsessionrc" >&2
+
+
+# Set up user directories
+# (usually run by /etc/X11/Xsession.d/60xdg-user-dirs-update)
+if [ -x /usr/bin/xdg-user-dirs-update ]; then
+  /usr/bin/xdg-user-dirs-update
+fi
+
+
+# turn off the fucking beep
+xset -b b 0
+
+#compton -b
+picom -b
+
+xrdb $HOME/.Xresources
+
+# intl us with deadkeys
+setxkbmap -layout us -variant intl
+
+
+nitrogen --restore
+
+
+syncthing --no-browser &
+
+ 
+dbus-launch --sh-syntax --exit-with-session i3 --shmlog-size 0
+
+
+
+

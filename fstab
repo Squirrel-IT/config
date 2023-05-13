@@ -1,0 +1,15 @@
+714c032163901621.b none swap sw
+714c032163901621.a / ffs rw,softdep 1 1
+714c032163901621.l /home ffs rw,nodev,nosuid,softdep 1 2
+714c032163901621.d /tmp ffs rw,nodev,nosuid,softdep 1 2
+714c032163901621.f /usr ffs rw,nodev,softdep 1 2
+714c032163901621.g /usr/X11R6 ffs rw,nodev,softdep 1 2
+714c032163901621.h /usr/local ffs rw,wxallowed,nodev,softdep 1 2
+714c032163901621.k /usr/obj ffs rw,nodev,nosuid,softdep 1 2
+714c032163901621.j /usr/src ffs rw,nodev,nosuid,softdep 1 2
+714c032163901621.e /var ffs rw,nodev,nosuid,softdep 1 2
+#
+cd20a5cab3dabbbe.a /data0 ffs rw,nodev,nosuid,softdep 1 2
+e863002f13a14ae4.a /data1 ffs rw,nodev,nosuid,softdep 1 2
+#
+beehive:/volume2/homes /net/homes nfs rw,nosuid,nodev 0 0

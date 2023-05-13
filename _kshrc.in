@@ -1,0 +1,53 @@
+# -*- mode: shell-script; coding: utf-8 -*-
+
+# .kshrc
+
+HISTFILE="$HOME/.ksh_history"
+HISTSIZE=5000
+
+export VISUAL="emacs"
+export EDITOR="$VISUAL"
+set -o emacs
+
+
+PS1='[\\u@\\h:\\w]\\n\\$ '
+
+
+
+# #ifeq OS Linux
+
+# # enable color support of ls and also add handy aliases
+# if [ -x /usr/bin/dircolors ]; then
+#     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+#     #alias ls='ls --color=auto'
+#     alias ls='exa'
+# fi
+
+
+# #endif
+
+#ifeq OS OpenBSD
+alias ls="colorls -G"
+#endif
+
+
+alias scheme='guile3.0'
+
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# #ifeq OS Linux
+# starship=$(starship -V)
+# if [ -n "$starship" ]; then
+#    eval "$(starship init bash)"
+# fi
+# #endif
+
+
+export CHOST=HOST
+export COS=OS
+
+
+
+

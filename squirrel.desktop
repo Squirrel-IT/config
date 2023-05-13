@@ -1,0 +1,4 @@
+[Desktop Entry]
+Name=Squirrel
+Exec=sh /home/sk/.xsession
+Type=Application
