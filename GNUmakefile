@@ -9,14 +9,21 @@ COS = $(shell uname -s)
 # preprocessor defines:
 GPP	= ./gpp -DHOST=$(CHOST) -DOS=$(COS)
 
+
+
 all:	showconfig
+
 
 
 showconfig:
 	@echo os: $(COS)
 	@echo gpp: $(GPP)
 	@echo host: $(CHOST)
-	@echo targets: clean doas gpp xsession xres i3 i3status kshrc profile mpv vimrc emacs
+ifeq ($(CHOST), cortes)
+	@echo targets: clean doas gpp fstab sysctl loginc insturl rcconf printcp 
+else
+	@echo targets: clean vimrc emacs
+endif
 
 
 
@@ -37,6 +44,83 @@ doas: /etc/doas.conf
 # GPP PREPROCESSOR =============================================================
 gpp: gpp.c
 	$(CC) -o gpp $< 
+
+
+
+# FSTAB =======================================================================
+fstab: /etc/fstab
+ifeq ($(CHOST), cortes)
+/etc/fstab: fstab.cortes
+	doas mkdir -p /net/homes
+	doas mkdir -p /net/share
+	doas mkdir -p /net/music
+	doas mkdir -p /net/video
+	doas install -b $< $@ 
+endif
+
+
+
+# SYSCTL ======================================================================
+sysctl: /etc/sysctl.conf
+/etc/sysctl.conf: sysctl.conf
+	doas install -b $< $@
+.PHONY: sysctl
+
+
+
+# LOGINC ======================================================================
+loginc: /etc/login.conf
+/etc/login.conf: login.conf
+	doas install -b $< $@
+.PHONY: loginc
+
+
+
+# INSTURL =====================================================================
+insturl: /etc/installurl
+/etc/installurl: installurl
+	doas install -b $< $@
+.PHONY: insturl
+
+
+
+# RCCONF ======================================================================
+rcconf: /etc/rc.conf.local
+ifeq ($(CHOST), cortes)
+/etc/rc.conf.local: rc.conf.local.cortes
+endif
+	doas install -b $< $@
+.PHONY: rcconf
+
+
+
+# PRINTCP ====================================================================
+printcp: /etc/printcap
+/etc/printcap: printcap
+	doas install -b $< $@
+.PHONY: printcp
+
+
+
+
+# XSESSION =====================================================================
+xsession: $(HOME)/.xsession gpp xres
+_xsession.out: _xsession.in
+	$(GPP) _xsession.in -o $@
+$(HOME)/.xsession: _xsession.out
+	install -b _xsession.out $(HOME)/.xsession
+	chmod +x $(HOME)/.xsession
+.PHONY: xsession
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -64,16 +148,6 @@ session: /usr/local/share/xsessions/squirrel.desktop
 /usr/local/share/xsessions/squirrel.desktop: squirrel.desktop
 	doas install -b $< $@
 
-
-
-# XSESSION =====================================================================
-xsession: $(HOME)/.xsession gpp xres
-_xsession.out: _xsession.in
-	$(GPP) _xsession.in -o $@
-$(HOME)/.xsession: _xsession.out
-	install -b _xsession.out $(HOME)/.xsession
-	chmod +x $(HOME)/.xsession
-.PHONY: xsession
 
 
 

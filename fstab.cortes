@@ -1,0 +1,18 @@
+04ba08be3aeb22cd.b none swap sw
+04ba08be3aeb22cd.a / ffs rw,softdep 1 1
+04ba08be3aeb22cd.l /home ffs rw,nodev,nosuid,softdep 1 2
+04ba08be3aeb22cd.d /tmp ffs rw,nodev,nosuid,softdep 1 2
+04ba08be3aeb22cd.f /usr ffs rw,nodev,softdep 1 2
+04ba08be3aeb22cd.g /usr/X11R6 ffs rw,nodev,softdep 1 2
+04ba08be3aeb22cd.h /usr/local ffs rw,wxallowed,nodev,softdep 1 2
+04ba08be3aeb22cd.k /usr/obj ffs rw,nodev,nosuid,softdep 1 2
+04ba08be3aeb22cd.j /usr/src ffs rw,nodev,nosuid,softdep  1 2
+04ba08be3aeb22cd.e /var ffs rw,nodev,nosuid,softdep 1 2
+#
+#
+beehive:/volume2/homes /net/homes nfs rw,nosuid,nodev 0 0
+beehive:/volume2/share /net/share nfs rw,nosuid,nodev 0 0
+beehive:/volume2/music /net/music nfs ro,nosuid,nodev 0 0
+beehive:/volume2/video /net/video nfs ro,nosuid,nodev 0 0
+beehive:/volume2/archive /net/archive nfs ro,nosuid,nodev 0 0
+

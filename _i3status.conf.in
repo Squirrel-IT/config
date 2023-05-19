@@ -4,9 +4,11 @@
 # If the above line is not correctly displayed, fix your editor first!
 
 general {
+        output_format = "i3bar"
         colors = true
         interval = 5
 }
+
 
 # order += "wireless _first_"
 order += "ethernet _first_"
@@ -15,8 +17,19 @@ order += "disk /"
 order += "load"
 order += "memory"
 order += "tztime local"
+order += "cpu_temperature cpu0"
+order += "cpu_temperature acpitz0"
 order += "volume master"
+ 
 
+cpu_temperature cpu0 {
+         format = "C: %degrees C"
+         path = "cpu0"
+}
+
+cpu_temperature acpitz0 {
+        format = "TZ: %degrees C"
+}
 
 
 wireless _first_ {

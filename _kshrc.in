@@ -27,7 +27,7 @@ PS1='[\\u@\\h:\\w]\\n\\$ '
 # #endif
 
 #ifeq OS OpenBSD
-alias ls="colorls -G"
+alias ls="colorls -GF"
 #endif
 
 

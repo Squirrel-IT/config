@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# xrandr --output DVI-D-0 --mode 1920x1200 --output DisplayPort-0 --mode 3440x1440 --right-of DVI-D-0
-# xrandr --output DisplayPort-0 --off --output DisplayPort-1 --mode 1920x1200 --pos 0x240 --rotate normal --output HDMI-A-0 --off --output HDMI-A-1 --primary --mode 3440x1440 --pos 1920x0 --rotate normal
-#xrandr --output DisplayPort-0 --primary --mode 3440x1440 --pos 1920x0 --rotate normal --output HDMI-A-0 --off --output DVI-D-0 --mode 1920x1200 --pos 0x0 --rotate normal
-xrandr --output DisplayPort-0 --off --output DisplayPort-1 --mode 1920x1200 --pos 0x240 --rotate normal --output HDMI-A-0 --off --output HDMI-A-1 --primary --mode 3440x1440 --pos 1920x0 --rotate normal
 
 usr_confdir="${XDG_CONFIG_HOME:-$HOME/.config}"
 usr_autostart="$usr_confdir/squirrel/autostart" # unused
@@ -42,10 +38,10 @@ xrdb $HOME/.Xresources
 setxkbmap -layout us -variant intl
 
 
-nitrogen --restore
+# nitrogen --restore
 
 
-syncthing --no-browser &
+# syncthing --no-browser &
 
  
 dbus-launch --sh-syntax --exit-with-session i3 --shmlog-size 0

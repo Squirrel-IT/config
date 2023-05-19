@@ -2119,7 +2119,10 @@ char *ArithmEval(int pos1, int pos2) {
     if (!DoArithmEval(s, 0, strlen(s), &i))
         return s; /* couldn't compute */
     t = malloc(MAX_GPP_NUM_SIZE);
-    sprintf(t, "%d", i);
+   
+    /*sprin_tf(t, "%d", i);*/
+    snprintf(t, MAX_GPP_NUM_SIZE, "%d", i);
+    
     free(s);
     return t;
 }
@@ -2812,7 +2815,7 @@ int ParsePossibleMeta(void) {
 
     case 15: { /* LINE */
         char buf[MAX_GPP_NUM_SIZE];
-        sprintf(buf, "%d", C->lineno);
+        snprintf(buf,MAX_GPP_NUM_SIZE, "%d", C->lineno);
         replace_directive_with_blank_line(C->out->f);
         sendout(buf, strlen(buf), 0);
     }

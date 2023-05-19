@@ -1,4 +1,0 @@
-multicast=YES
-pkg_scripts=messagebus avahi_daemon gdm
-#
-lpd_flags=""
