@@ -1,3 +1,23 @@
+;; -*- mode:emacs-lisp; coding: utf-8 -*-
+
+
+;; sven's  emacs configuration
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; version information
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq sk-version "0.95")
+(setq current-language-environment "English")
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; PATH
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(cond ((eq system-type 'darwin)
+       (setq exec-path (append exec-path '("/opt/homebrew/bin")))))
 
 
 ;; BASICS ------------------------------------------------------------------------------------------
@@ -5,11 +25,6 @@
 ;; define the file for customizations
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file) (load custom-file))
-
-
-;; Don't show the splash screen
-(setq inhibit-startup-message t)  ; Comment at end of line!
-
 
 
 
@@ -31,6 +46,10 @@
 
 
 ;; GUI ---------------------------------------------------------------------------------------------
+
+;; Don't show the splash screen
+(setq inhibit-startup-message t)
+
 (tool-bar-mode -1)
 (menu-bar-mode 1)
 (scroll-bar-mode -1)
@@ -46,6 +65,16 @@
 
 ;; Theming
 ;;(load-theme 'melancholy t)
+
+
+;;(load-theme 'spolsky t)
+
+
+(cond ((eq system-type 'darwin)
+       (when window-system
+	 (custom-set-faces
+	  '(default ((t (:family "Monaco" :foundry "ADBE" :slant normal :weight normal :height 130 :width normal))))))))
+
 
 
 ;; MODULES -----------------------------------------------------------------------------------------
@@ -78,5 +107,20 @@
 
 ;; rainbow delimeters
 (use-package rainbow-delimiters)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; server
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'server)
+(unless (server-running-p) (server-start))
+
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (when (and window-system (not (server-running-p))))))
+
+
 
 
