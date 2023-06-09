@@ -1,34 +1,14 @@
-# /etc/profile: system-wide .profile file for the Bourne shell (sh(1))
-# and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).
+# profile
+# [% os %]
+# [% host %]
+# [% date %]
 
-if [ "$(id -u)" -eq 0 ]; then
-  PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-else
-  PATH="/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-fi
-export PATH
 
-if [ "${PS1-}" ]; then
-  if [ "${BASH-}" ] && [ "$BASH" != "/bin/sh" ]; then
-    # The file bash.bashrc already sets the default PS1.
-    # PS1='\h:\w\$ '
-    if [ -f /etc/bash.bashrc ]; then
-      . /etc/bash.bashrc
-    fi
-  else
-    if [ "$(id -u)" -eq 0 ]; then
-      PS1='# '
-    else
-      PS1='$ '
-    fi
-  fi
-fi
 
-if [ -d /etc/profile.d ]; then
-  for i in /etc/profile.d/*.sh; do
-    if [ -r $i ]; then
-      . $i
-    fi
-  done
-  unset i
-fi
+# this is for chromium:
+export ENABLE_WASM=1
+
+export PATH="/home/sk/.local/bin:/home/sk/bin:/usr/local/jdk-17/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/X11R6/bin:/usr/bin:/usr/sbin:/bin:/sbin" 
+
+export JAVA_HOME="/usr/local/jdk-17"
+

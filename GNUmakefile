@@ -16,11 +16,15 @@ TPAGE	= tpage --define host=$(CHOST) --define os=$(COS) --define date="$(CDATE)"
 
 
 # install
-INST 	= doas install -b $< $@ 
+
+SINST 	= doas install -bpm 644 --  $< $@ 
+SINSTX 	= doas install -bpm 755 --  $< $@ 
+INST 	= install -bpm 644 --  $< $@ 
+INSTX 	= install -bpm 755 --  $< $@ 
 
 
 .SUFFIXES: .out .in
-.out.in:
+%.out: %.in
 	$(TPAGE) $< > $@
 	
 
@@ -34,7 +38,7 @@ showconfig:
 	@echo tpage: $(TPAGE)
 	@echo host: $(CHOST)
 
-	@echo targets: clean installpackages dirs vimrc emacs xsession
+	@echo targets: clean installpackages dirs test bash xres xsession
 ifeq ($(COS), OpenBSD)
 	@echo targets: fstab sysctl loginc insturl rcconf printcp 
 endif
@@ -44,13 +48,16 @@ endif
 # CLEAN ========================================================================
 .PHONY: clean
 clean:
-	rm -f *.out *~ *.o gpp
+	rm -f *.out *~ *.o gpp test *.old
 
 
-
+# INSTALL PACKAGES ============================================================
 installpackages:
 ifeq ($(COS), Linux)
 	doas apt install doas dbus-x11 vim i3 rofi dunst picom nitrogen make fonts-inconsolata libtemplate-perl
+endif
+ifeq ($(COS),OpenBSD)
+	doas pkg_add vim i3 rofi dunst picom nitrogen gmake inconsolata-font inconsolata-new p5-Template p5-Text-Template colorls
 endif
 
 
@@ -63,12 +70,61 @@ dirs:
 	mkdir -p $(HOME)/.local
 
 
+
 # TEST ========================================================================
 .PHONY: atest
 ATEST	:= $(PWD)/test
 atest: $(ATEST)
 $(ATEST): __test.out
 	$(INST)	
+
+
+
+# BASH ========================================================================
+.PHONY: bash
+BASHPROFILE 	:= $(HOME)/.bash_profile
+BASHRC			:= $(HOME)/.bashrc
+bash: $(BASHPROFILE) $(BASHRC)
+$(BASHPROFILE): __bash_profile.out
+	$(INST)
+$(BASHRC):	__bashrc.out
+	$(INST)
+
+
+
+# Xresources ===================================================================
+.PHONY: xres
+XRES := $(HOME)/.Xresources
+xres: $(XRES)
+$(XRES): __Xresources.out
+	$(INST)	
+	xrdb $@
+
+
+
+
+# XSESSION =====================================================================
+.PHONY: xsession
+XSESSION := $(HOME)/.xsession
+xsession: $(XSESSION) xres
+$(XSESSION): __xsession.out
+	$(INSTX)	
+
+
+
+# i3 ============================================================================
+.PHONY: i3
+I3 := $(HOME)/.config/i3/config
+i3: $(I3)
+$(I3): __i3_config.out
+	mkdir -p $(HOME)/.config/i3
+	$(INST)
+
+
+
+
+
+
 
 
 
@@ -148,17 +204,6 @@ printcp: /etc/printcap
 
 
 
-# XSESSION =====================================================================
-.PHONY: xsession
-XSESSION := $(HOME)/.xsession
-xsession: $(XSESSION) xres
-__xsession.out: __xsession.in
-	$(TPAGE) __xsession.in > $@
-$(XSESSION): __xsession.out
-	install -b __xsession.out $(XSESSION)
-	chmod +x $(HOME)/.xsession
-
-
 
 
 # vim ==========================================================================
@@ -188,28 +233,6 @@ session: /usr/local/share/xsessions/squirrel.desktop
 
 
 
-
-# Xresources ===================================================================
-.PHONY: xres
-XRES := $(HOME)/.Xresources
-xres: $(XRES)
-__Xresources.out: __Xresources.in
-	$(TPAGE) __Xresources.in > $@	
-$(XRES): __Xresources.out
-	install -b $< $@
-	xrdb $@
-
-
-
-# i3 ============================================================================
-.PHONY: i3
-I3 := $(HOME)/.config/i3/config
-i3: $(I3)
-$(I3): __i3_config.out
-	mkdir -p $(HOME)/.config/i3
-	install -b __i3_config.out $(I3)
-__i3_config.out: __i3_config.in 
-	$(TPAGE) __i3_config.in > $@
 
 
 
