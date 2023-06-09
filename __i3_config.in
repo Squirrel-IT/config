@@ -1,4 +1,8 @@
 # sk i3 v0.9
+# HOST = [% host %]
+# OS = [% os %]
+# DATE = [% date %]
+#
 set $mod Mod4
 font pango:monospace 8
 floating_modifier $mod
@@ -31,7 +35,7 @@ bindsym $mod+Shift+q kill
 # bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 
 # basics
-bindsym $mod+Return exec xfce4-terminal # urxvt # i3-sensible-terminal
+bindsym $mod+Return exec urxvt # i3-sensible-terminal
 bindsym $mod+d exec dmenu_run
 
 

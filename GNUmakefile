@@ -1,42 +1,87 @@
 #-*- coding: utf-8; mode: makefile; -*-
 
 # ENVIRONMENT 
+# Check the environment to detect on which system we are running.
+# Current targets: debian, openbsd
+
 # get the following variables from env:
-CHOST = $(shell hostname -s)
-COS = $(shell uname -s)
+CHOST 	= $(shell hostname -s)
+COS 	= $(shell uname -s)
+CDATE 	= $(shell date)
 
 
 # preprocessor defines:
-GPP	= ./gpp -DHOST=$(CHOST) -DOS=$(COS)
+GPP		= ./gpp -DHOST=$(CHOST) -DOS=$(COS)
+TPAGE	= tpage --define host=$(CHOST) --define os=$(COS) --define date="$(CDATE)"
 
 
+# install
+INST 	= doas install -b $< $@ 
 
+
+.SUFFIXES: .out .in
+.out.in:
+	$(TPAGE) $< > $@
+	
+
+.PHONY: all showconfig
 all:	showconfig
-
 
 
 showconfig:
 	@echo os: $(COS)
 	@echo gpp: $(GPP)
+	@echo tpage: $(TPAGE)
 	@echo host: $(CHOST)
-ifeq ($(CHOST), cortes)
-	@echo targets: clean doas gpp fstab sysctl loginc insturl rcconf printcp 
-else
-	@echo targets: clean vimrc emacs
+
+	@echo targets: clean installpackages dirs vimrc emacs xsession
+ifeq ($(COS), OpenBSD)
+	@echo targets: fstab sysctl loginc insturl rcconf printcp 
 endif
 
 
 
 # CLEAN ========================================================================
+.PHONY: clean
 clean:
 	rm -f *.out *~ *.o gpp
-.PHONY: clean
+
+
+
+installpackages:
+ifeq ($(COS), Linux)
+	doas apt install doas dbus-x11 vim i3 rofi dunst picom nitrogen make fonts-inconsolata libtemplate-perl
+endif
+
+
+
+# DIRS ========================================================================
+.PHONY: dirs
+dirs:
+	mkdir -p $(HOME)/bin
+	mkdir -p $(HOME)/.config
+	mkdir -p $(HOME)/.local
+
+
+# TEST ========================================================================
+.PHONY: atest
+ATEST	:= $(PWD)/test
+atest: $(ATEST)
+$(ATEST): __test.out
+	$(INST)	
+
+
+
+
+
 
 
 
 # DOAS ========================================================================
-doas: /etc/doas.conf
-/etc/doas.conf: doas.conf
+.PHONY: doas
+DOAS :=	/etc/doas.conf
+doas: $(DOAS)
+$(DOAS): doas.conf
 	doas install -b $< $@ # this is a nice chicken and egg problem...
 
 
@@ -61,10 +106,10 @@ endif
 
 
 # SYSCTL ======================================================================
+.PHONY:	sysctl
 sysctl: /etc/sysctl.conf
 /etc/sysctl.conf: sysctl.conf
 	doas install -b $< $@
-.PHONY: sysctl
 
 
 
@@ -104,32 +149,25 @@ printcp: /etc/printcap
 
 
 # XSESSION =====================================================================
-xsession: $(HOME)/.xsession gpp xres
-_xsession.out: _xsession.in
-	$(GPP) _xsession.in -o $@
-$(HOME)/.xsession: _xsession.out
-	install -b _xsession.out $(HOME)/.xsession
-	chmod +x $(HOME)/.xsession
 .PHONY: xsession
-
-
-
-
-
-
-
-
-
+XSESSION := $(HOME)/.xsession
+xsession: $(XSESSION) xres
+__xsession.out: __xsession.in
+	$(TPAGE) __xsession.in > $@
+$(XSESSION): __xsession.out
+	install -b __xsession.out $(XSESSION)
+	chmod +x $(HOME)/.xsession
 
 
 
 
 # vim ==========================================================================
-vimrc: $(HOME)/.vimrc
-$(HOME)/.vimrc: _vimrc
+.PHONY: vimrc
+VIMRC := $(HOME)/.vimrc
+vimrc: $(VIMRC)
+$(VIMRC): _vimrc
 	install -b $< $@
 	mkdir -p $(HOME)/.vim/pack/yoko
-.PHONY: vimrc
 
 
 
@@ -152,22 +190,26 @@ session: /usr/local/share/xsessions/squirrel.desktop
 
 
 # Xresources ===================================================================
-xres: $(HOME)/.Xresources
-$(HOME)/.Xresources: _Xresources
+.PHONY: xres
+XRES := $(HOME)/.Xresources
+xres: $(XRES)
+__Xresources.out: __Xresources.in
+	$(TPAGE) __Xresources.in > $@	
+$(XRES): __Xresources.out
 	install -b $< $@
 	xrdb $@
-.PHONY: xres
 
 
 
 # i3 ============================================================================
-i3: $(HOME)/.config/i3/config
-$(HOME)/.config/i3/config: _i3_config.out
-	mkdir -p $(HOME)/.config/i3
-	install -b _i3_config.out $(HOME)/.config/i3/config
-_i3_config.out: _i3_config.in gpp
-	$(GPP) _i3_config.in -o _i3_config.out
 .PHONY: i3
+I3 := $(HOME)/.config/i3/config
+i3: $(I3)
+$(I3): __i3_config.out
+	mkdir -p $(HOME)/.config/i3
+	install -b __i3_config.out $(I3)
+__i3_config.out: __i3_config.in 
+	$(TPAGE) __i3_config.in > $@
 
 
 

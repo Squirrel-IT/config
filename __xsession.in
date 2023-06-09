@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# .xsession for
+# OS = [% os %]
+# HOST = [% host %]
+# DATE = [% date %]
+
 
 usr_confdir="${XDG_CONFIG_HOME:-$HOME/.config}"
 usr_autostart="$usr_confdir/squirrel/autostart" # unused
