@@ -50,9 +50,14 @@
 ;; Don't show the splash screen
 (setq inhibit-startup-message t)
 
-(tool-bar-mode -1)
-(menu-bar-mode 1)
-(scroll-bar-mode -1)
+
+(when (display-graphic-p)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1))
+
+
+(menu-bar-mode -1)
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Display line numbers in every buffer
