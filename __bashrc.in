@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # If not running interactively, don't do anything
 case $- in
@@ -71,5 +72,12 @@ alias ls='colorls -GF'
 #alias ll='ls -l'
 #alias la='ls -A'
 #alias l='ls -CF'
+
+
+export VISUAL="emacs"
+export EDITOR="$VISUAL"
+set -o emacs
+
+alias scheme='guile3.0'
 
 

@@ -19,14 +19,16 @@ TPAGE	= tpage --define host=$(CHOST) --define os=$(COS) --define date="$(CDATE)"
 
 SINST 	= doas install -bpm 644 --  $< $@ 
 SINSTX 	= doas install -bpm 755 --  $< $@ 
+SINSTA  = doas install -bpm 600 --  $< $@ 
 INST 	= install -bpm 644 --  $< $@ 
 INSTX 	= install -bpm 755 --  $< $@ 
+
 
 
 .SUFFIXES: .out .in
 %.out: %.in
 	$(TPAGE) $< > $@
-	
+
 
 .PHONY: all showconfig
 all:	showconfig
@@ -38,7 +40,7 @@ showconfig:
 	@echo tpage: $(TPAGE)
 	@echo host: $(CHOST)
 
-	@echo targets: clean installpackages dirs test bash xres xsession
+	@echo targets: clean installpackages dirs test bash xres xsession doas gpp
 ifeq ($(COS), OpenBSD)
 	@echo targets: fstab sysctl loginc insturl rcconf printcp 
 endif
@@ -54,10 +56,10 @@ clean:
 # INSTALL PACKAGES ============================================================
 installpackages:
 ifeq ($(COS), Linux)
-	doas apt install doas dbus-x11 vim i3 rofi dunst picom nitrogen make fonts-inconsolata libtemplate-perl
+	doas apt install doas dbus-x11 vim i3 i3status rofi dunst picom nitrogen make fonts-inconsolata libtemplate-perl emacs rxvt-unicode
 endif
 ifeq ($(COS),OpenBSD)
-	doas pkg_add vim i3 rofi dunst picom nitrogen gmake inconsolata-font inconsolata-new p5-Template p5-Text-Template colorls
+	doas pkg_add vim i3 rofi dunst picom nitrogen gmake git i3status inconsolata-font p5-Template p5-Text-Template colorls emacs rxvt-unicode bash
 endif
 
 
@@ -122,29 +124,42 @@ $(I3): __i3_config.out
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 # DOAS ========================================================================
 .PHONY: doas
 DOAS :=	/etc/doas.conf
 doas: $(DOAS)
 $(DOAS): doas.conf
-	doas install -b $< $@ # this is a nice chicken and egg problem...
+	$(SINSTA)
 
 
 
 # GPP PREPROCESSOR =============================================================
 gpp: gpp.c
 	$(CC) -o gpp $< 
+
+
+
+
+# SYSCTL ======================================================================
+.PHONY:	sysctl
+sysctl: /etc/sysctl.conf
+/etc/sysctl.conf: sysctl.conf
+	$(SINST)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -160,12 +175,6 @@ ifeq ($(CHOST), cortes)
 endif
 
 
-
-# SYSCTL ======================================================================
-.PHONY:	sysctl
-sysctl: /etc/sysctl.conf
-/etc/sysctl.conf: sysctl.conf
-	doas install -b $< $@
 
 
 
