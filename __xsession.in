@@ -43,6 +43,9 @@ xrdb $HOME/.Xresources
 setxkbmap -layout us -variant intl
 
 
+urxvtd -q -f -o
+
+
 # nitrogen --restore
 
 

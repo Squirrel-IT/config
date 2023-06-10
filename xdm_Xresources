@@ -1,0 +1,70 @@
+Xcursor.theme: whiteglass
+
+
+ 
+#define WHITE	#EDF6E6
+#define BLACK	#252123
+#define RED	#DA9B9A
+#define BLUE	#7AADD9
+#define DKBLUE	#6187AD
+#define GREY	#54697F
+#define DKGREY	#4A566B
+ 
+xroot.background: BLACK
+ 
+
+
+xlogin.Login.echoPasswd:   false
+xlogin.Login.fail:         Authorization failed
+xlogin.Login.greeting:     CLIENTHOST
+xlogin.Login.namePrompt:   \040\040\040\040\040\040Login:\040
+xlogin.Login.passwdPrompt: Password:\040
+
+xlogin*borderWidth:            0
+xlogin.Login.frameWidth:       0
+xlogin.Login.innerFramesWidth: 0
+xlogin.Login.sepWidth:         0
+
+xlogin.Login.background:  DKBLUE
+xlogin.Login.failColor:   RED
+xlogin.Login.foreground:  WHITE
+xlogin.Login.greetColor:  WHITE
+xlogin.Login.inpColor:    BLUE
+xlogin.Login.promptColor: WHITE
+
+#if WIDTH > 800
+xlogin*greetFont: -adobe-helvetica-bold-o-normal--24-240-75-75-p-138-iso8859-1
+xlogin*font: -adobe-helvetica-medium-r-normal--18-180-75-75-p-98-iso8859-1
+xlogin*promptFont: -adobe-helvetica-bold-r-normal--18-180-75-75-p-103-iso8859-1
+xlogin*failFont: -adobe-helvetica-bold-r-normal--18-180-75-75-p-103-iso8859-1
+xlogin*greetFace:	Serif-24:bold:italic
+xlogin*face: 		Helvetica-18
+xlogin*promptFace: 	Helvetica-18:bold
+xlogin*failFace: 	Helvetica-18:bold
+#else
+xlogin*greetFont: -adobe-helvetica-bold-o-normal--17-120-100-100-p-92-iso8859-1
+xlogin*font: -adobe-helvetica-medium-r-normal--12-120-75-75-p-67-iso8859-1
+xlogin*promptFont: -adobe-helvetica-bold-r-normal--12-120-75-75-p-70-iso8859-1
+xlogin*failFont: -adobe-helvetica-bold-o-normal--14-140-75-75-p-82-iso8859-1
+xlogin*greetFace:	Serif-18:bold:italic
+xlogin*face:		Helvetica-12
+xlogin*promptFace:	Helvetica-12:bold
+xlogin*failFace:	Helvetica-14:bold
+#endif
+
+
+
+xlogin*logoPadding: 0
+
+XConsole.text.geometry:	480x130
+XConsole.verbose:	true
+XConsole*iconic:	true
+XConsole*font:		fixed
+
+Chooser*geometry:		700x500+300+200
+Chooser*allowShellResize:	false
+Chooser*viewport.forceBars:	true
+Chooser*label.font:		*-new century schoolbook-bold-i-normal-*-240-*
+Chooser*label.label:		XDMCP Host Menu from CLIENTHOST
+Chooser*list.font:		-*-*-medium-r-normal-*-*-230-*-*-c-*-iso8859-1
+Chooser*Command.font:		*-new century schoolbook-bold-r-normal-*-180-*

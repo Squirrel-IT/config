@@ -59,9 +59,13 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 [% END %]
 
-
 [%IF os == 'OpenBSD' %]
 alias ls='colorls -GF'
+[% END %]
+
+[%IF os == 'FreeBSD' %]
+alias ls='ls -GF'
+export LSCOLORS="gxfxcxdxbxegedabagacad" 
 [% END %]
 
 

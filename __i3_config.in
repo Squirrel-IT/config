@@ -35,8 +35,8 @@ bindsym $mod+Shift+q kill
 # bindsym $mod+Ctrl+x --release exec --no-startup-id xkill
 
 # basics
-bindsym $mod+Return exec urxvt # i3-sensible-terminal
-bindsym $mod+d exec dmenu_run
+bindsym $mod+Return exec urxvtc # i3-sensible-terminal
+bindsym $mod+d exec rofi -show run # dmenu_run
 
 
 # change focus
