@@ -6,6 +6,7 @@ case $- in
       *) return;;
 esac
 
+
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
 
@@ -24,6 +25,31 @@ shopt -s checkwinsize
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
 
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+	for rc in ~/.bashrc.d/*; do
+		if [ -f "$rc" ]; then
+			. "$rc"
+		fi
+	done
+fi
+
+unset rc
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
@@ -83,5 +109,3 @@ export EDITOR="$VISUAL"
 set -o emacs
 
 alias scheme='guile3.0'
-
-

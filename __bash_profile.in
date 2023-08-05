@@ -4,11 +4,16 @@
 # [% date %]
 
 
-
+# these were for freebsd:
 # this is for chromium:
-export ENABLE_WASM=1
+# export ENABLE_WASM=1
+# export PATH="/home/sk/.local/bin:/home/sk/bin:/usr/local/jdk-17/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/X11R6/bin:/usr/bin:/usr/sbin:/bin:/sbin" 
+# export JAVA_HOME="/usr/local/jdk-17"
 
-export PATH="/home/sk/.local/bin:/home/sk/bin:/usr/local/jdk-17/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/X11R6/bin:/usr/bin:/usr/sbin:/bin:/sbin" 
 
-export JAVA_HOME="/usr/local/jdk-17"
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+fi
 
+# User specific environment and startup programs

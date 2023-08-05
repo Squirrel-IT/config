@@ -1,30 +1,24 @@
 #-*- coding: utf-8; mode: makefile; -*-
 
-# This is the fedora version.
-# It uses dnf to install packages.
-# It also uses sudo instead of doas/opendoas - for now.
 
 # GNU make uses $<, $^, $@, ...
 # BSD make uses ${.IMPSRC}, ${.ALLSRC}, ${.TARGET}, ... (note, that both *SRC variables hold a list of source files)
 
-# PACKAGES 
-PACKAGES	:= vim perl-Template-Toolkit emacs dunst ulauncher rofi foot 
-PACKAGES	+= syncthing moc cmus guile30 g++ meson opendoas
+# PACKAGES
+PACKAGES	:= drm-kmod xorg vim i3 i3status rofi dunst picom nitrogen inconsolata-ttf emacs rxvt-unicode bash
+PACKAGES	+= p5-Template-Toolkit syncthing moc cmus musikcube
 PACKAGES	+= buku ncdu gnupg xpdf mg btop htop mpg123 fzf
 
 
 # ENVIRONMENT 
 # Check the environment to detect on which system we are running.
+# Current target: FreeBSD -> BSD-syntax for Makefile
 
 # get the following variables from env:
 CHOST 		!= hostname -s
 COS 		!= uname -s
 CDATE		!= date
 HBIN		:= ${HOME}/bin
-
-
-# COMMANDS
-DOAS		:= sudo
 
 
 # preprocessor defines
@@ -34,16 +28,16 @@ TPAGE		:= tpage --define host=${CHOST} --define os=${COS} --define date="${CDATE
 
 
 # install
-SINST 		:= $(DOAS) install -bpm 644 
-SINSTX 		:= $(DOAS) install -bpm 755 
-SINSTA  	:= $(DOAS) install -bpm 600 
-INST 		:= install -bpm 644
-INSTX 		:= install -bpm 755 
+SINST 		:= doas install -bpm 644 -- ${.ALLSRC} ${.TARGET}
+SINSTX 		:= doas install -bpm 755 -- ${.ALLSRC} ${.TARGET}
+SINSTA  	:= doas install -bpm 600 -- ${.ALLSRC} ${.TARGET}
+INST 		:= install -bpm 644 -- ${.ALLSRC} ${.TARGET} 
+INSTX 		:= install -bpm 755 -- ${.ALLSRC} ${.TARGET}
 
 
 .SUFFIXES: .out .in
 .in.out:
-	${TPAGE} $< > $@
+	${TPAGE} ${.IMPSRC} > ${.TARGET}
 
 
 .PHONY: all showconfig
@@ -56,7 +50,10 @@ showconfig:
 	@echo tpage: ${TPAGE}
 	@echo host: ${CHOST}
 
-	@echo targets: clean installpackages dirs atest bash sway foot
+	@echo targets: clean installpackages dirs atest bash xres xsession doas i3 i3status _gpp
+.if ${COS} == "FreeBSD"
+	@echo "further targets: (FreeBSD-specific)"
+.endif
 
 
 
@@ -66,10 +63,9 @@ clean:
 	rm -f *.out *~ *.o gpp test *.old
 
 
-
 # INSTALL PACKAGES ============================================================
 installpackages:
-	sudo dnf -y install ${PACKAGES}
+	doas pkg install ${PACKAGES}
 
 
 
@@ -84,10 +80,10 @@ dirs:
 
 # TEST ========================================================================
 .PHONY: atest
-ATEST := $(PWD)/test
+ATEST		:= $(PWD)/test
 atest: ${ATEST}
 ${ATEST}: __test.out
-	${INST} $^ $@ 
+	${INST}
 
 
 
@@ -97,34 +93,56 @@ BASHPROFILE 	:= $(HOME)/.bash_profile
 BASHRC		:= $(HOME)/.bashrc
 bash: $(BASHPROFILE) $(BASHRC)
 $(BASHPROFILE): __bash_profile.out
-	$(INST) $^ $@  
+	$(INST)
 $(BASHRC):	__bashrc.out
-	$(INST) $^ $@ 
+	$(INST)
 
 
 
+# Xresources ===================================================================
+.PHONY: xres
+XRES := $(HOME)/.Xresources
+xres: $(XRES)
+$(XRES): __Xresources.out
+	$(INST)	
+	xrdb ${.TARGET}
 
-# sway ============================================================================
-.PHONY: sway
-sway := $(HOME)/.config/sway/config
-sway: $(sway)
-$(sway): __sway_config.out
-	mkdir -p $(HOME)/.config/sway
-	$(INST) $^ $@
 
 
-# foot ============================================================================
-.PHONY: foot
-foot := $(HOME)/.config/foot/foot.ini
-foot: $(foot)
-$(foot): __foot_ini.out
-	mkdir -p $(HOME)/.config/foot
-	$(INST) $^ $@
+# XSESSION =====================================================================
+.PHONY: xsession
+XSESSION := $(HOME)/.xsession
+xsession: $(XSESSION) xres
+$(XSESSION): __xsession.out
+	$(INSTX)	
+
+
+
+# # i3 ============================================================================
+# .PHONY: i3
+# I3 := $(HOME)/.config/i3/config
+# i3: $(I3)
+# $(I3): __i3_config.out
+# 	mkdir -p $(HOME)/.config/i3
+# 	$(INST)
+
+
+
+# # i3status =====================================================================
+# i3status: $(HOME)/.i3status.conf
+# $(HOME)/.i3status.conf: _i3status.conf.out
+# 	install -b _i3status.conf.out $(HOME)/.i3status.conf
+# _i3status.conf.out: _i3status.conf.in gpp
+# 	$(GPP) _i3status.conf.in -o _i3status.conf.out
+# .PHONY: i3status
 
 
 
 # # DOAS ========================================================================
 # .PHONY: doas
+# ifeq ($(COS),FreeBSD) 
+# DOAS :=	/usr/local/etc/doas.conf # FreeBSD specific
+# else
 # DOAS :=	/usr/local/etc/doas.conf # FreeBSD specific
 # endif
 # doas: $(DOAS)
@@ -171,6 +189,10 @@ ${HBIN}/gpp: gpp
 # 	doas mkdir -p /net/archive
 # 	$(SINST)
 # endif
+
+
+
+
 
 
 
@@ -305,39 +327,3 @@ ${HBIN}/gpp: gpp
 # 	chmod +x $@
 # .PHONY: scripts
 
-
-# # Xresources ===================================================================
-# .PHONY: xres
-# XRES := $(HOME)/.Xresources
-# xres: $(XRES)
-# $(XRES): __Xresources.out
-# 	$(INST)	
-# 	xrdb ${.TARGET}
-
-
-
-# # XSESSION =====================================================================
-# .PHONY: xsession
-# XSESSION := $(HOME)/.xsession
-# xsession: $(XSESSION) xres
-# $(XSESSION): __xsession.out
-# 	$(INSTX)	
-
-
-# # i3 ============================================================================
-# .PHONY: i3
-# I3 := $(HOME)/.config/i3/config
-# i3: $(I3)
-# $(I3): __i3_config.out
-# 	mkdir -p $(HOME)/.config/i3
-# 	$(INST)
-
-
-
-# # i3status =====================================================================
-# i3status: $(HOME)/.i3status.conf
-# $(HOME)/.i3status.conf: _i3status.conf.out
-# 	install -b _i3status.conf.out $(HOME)/.i3status.conf
-# _i3status.conf.out: _i3status.conf.in gpp
-# 	$(GPP) _i3status.conf.in -o _i3status.conf.out
-# .PHONY: i3status
