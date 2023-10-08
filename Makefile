@@ -1,6 +1,6 @@
 #-*- coding: utf-8; mode: makefile; -*-
 
-# This is the fedora version.
+# This is the debian version.
 # It uses dnf to install packages.
 # It also uses sudo instead of doas/opendoas - for now.
 
@@ -8,9 +8,9 @@
 # BSD make uses ${.IMPSRC}, ${.ALLSRC}, ${.TARGET}, ... (note, that both *SRC variables hold a list of source files)
 
 # PACKAGES 
-PACKAGES	:= vim perl-Template-Toolkit emacs dunst ulauncher rofi foot 
-PACKAGES	+= syncthing moc cmus guile30 g++ meson opendoas
-PACKAGES	+= buku ncdu gnupg xpdf mg btop htop mpg123 fzf
+PACKAGES	:= vim libtemplate-perl emacs dunst rofi foot 
+PACKAGES	+= moc cmus guile-3.0 g++ meson opendoas nala
+PACKAGES	+= buku ncdu gnupg xpdf mg btop htop mpg123 fzf sway
 
 
 # ENVIRONMENT 
@@ -56,7 +56,7 @@ showconfig:
 	@echo tpage: ${TPAGE}
 	@echo host: ${CHOST}
 
-	@echo targets: clean installpackages dirs atest bash sway foot
+	@echo targets: clean installpackages dirs atest bash sway foot emacs
 
 
 
@@ -69,7 +69,7 @@ clean:
 
 # INSTALL PACKAGES ============================================================
 installpackages:
-	sudo dnf -y install ${PACKAGES}
+	sudo apt install ${PACKAGES}
 
 
 
@@ -140,13 +140,13 @@ ${HBIN}/gpp: gpp
 
 
 
-# # EMACS ========================================================================
-# .PHONY: emacs
-# emacs: $(HOME)/.emacs.d/init.el
-# $(HOME)/.emacs.d/init.el: init.el
-# 	mkdir -p $(HOME)/.emacs.d
-# 	touch $(HOME)/.emacs.d/custom.el
-# 	install -b $< $@
+# EMACS ========================================================================
+.PHONY: emacs
+emacs: $(HOME)/.emacs.d/init.el
+$(HOME)/.emacs.d/init.el: init.el
+	mkdir -p $(HOME)/.emacs.d
+	touch $(HOME)/.emacs.d/custom.el
+	install -b $< $@
 
 
 # # xdm ==========================================================================
