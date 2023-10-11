@@ -56,7 +56,7 @@ showconfig:
 	@echo tpage: ${TPAGE}
 	@echo host: ${CHOST}
 
-	@echo targets: clean installpackages dirs atest bash sway foot emacs
+	@echo targets: clean installpackages dirs atest bash sway foot waybar emacs
 
 
 
@@ -121,7 +121,13 @@ $(foot): __foot_ini.out
 	mkdir -p $(HOME)/.config/foot
 	$(INST) $^ $@
 
-
+# waybar
+.PHONY: waybar
+waybar := $(HOME)/.config/waybar/config
+waybar: $(waybar)
+$(waybar): __waybar_config
+	mkdir -p $(HOME)/.config/waybar
+	$(INST) $^ $@
 
 # # DOAS ========================================================================
 # .PHONY: doas

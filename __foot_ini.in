@@ -70,7 +70,7 @@ font=monospace:size=10
 # hide-when-typing=no
 # alternate-scroll-mode=yes
 
-[touch]
+# [touch]
 # long-press-delay=400
 
 [colors]

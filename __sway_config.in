@@ -14,7 +14,7 @@ set $term foot
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 #set $menu dmenu_path | dmenu | xargs swaymsg exec --
-set $menu ulauncher
+set $menu rofi -show run
 
 ### Output configuration
 #
@@ -27,9 +27,9 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
-output DP-1 resolution 1920x1200 position 0,0 transform 270
-output DP-4 resolution 3440x1440 position 1200,180
-output eDP-1 resolution 1920x1080 position 4640,800
+output DP-2 resolution 1920x1200 position 0,0 transform 270
+output DP-1 resolution 3440x1440 position 1200,180
+# output eDP-1 resolution 1920x1080 position 4640,800
 
 
 
@@ -202,23 +202,25 @@ bindsym $mod+r mode "resize"
 # Status Bar:
 #
 # Read `man 5 sway-bar` for more information about this section.
-bar {
-    position top
+bar swaybar_command waybar
 
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
-
-    colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
-    }
-}
+# {
+#     position top
+#
+#    # When the status_command prints a new line to stdout, swaybar updates.
+#    # The default just shows the current date and time.
+#    status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
+#
+#    colors {
+#        statusline #ffffff
+#        background #323232
+#        inactive_workspace #32323200 #32323200 #5c5c5c
+#    }
+#}
 
 
 # exec
-exec swaymsg exec syncthing
-exec swaymsg exec "/home/sk/.local/bin/streamdeck -n" 
+# exec swaymsg exec syncthing
+# exec swaymsg exec "/home/sk/.local/bin/streamdeck -n" 
 
 include /etc/sway/config.d/*
