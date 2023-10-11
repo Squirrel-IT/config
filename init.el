@@ -55,7 +55,6 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1))
 
-
 (menu-bar-mode -1)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -113,6 +112,9 @@
 ;; rainbow delimeters
 (use-package rainbow-delimiters)
 
+
+;; evil-mode
+(use-package evil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; server
